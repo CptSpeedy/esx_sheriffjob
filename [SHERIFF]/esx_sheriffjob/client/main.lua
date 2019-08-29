@@ -2150,7 +2150,8 @@ function POLICE_radar()
                Wait(1)
             end
             TaskPlayAnim(GetPlayerPed(-1), "anim@apt_trans@garage", "gar_open_1_left", 1.0, -1.0, 5000, 0, 1, true, true, true) -- animation
-       
+            -- Removing AnimDict for server memory usage
+	    RemoveAnimDict("anim@apt_trans@garage")
             Citizen.Wait(2000) -- prevent spam radar + synchro spawn with animation time
        
             SetEntityAsMissionEntity(Radar, false, false)
@@ -2189,11 +2190,13 @@ function POLICE_radar()
        
         if maxSpeed ~= nil then -- maxSpeed = nil only if the player hasn't entered a valid number
        
-            RequestAnimDict("anim@apt_trans@garage")
-            while not HasAnimDictLoaded("anim@apt_trans@garage") do
-               Wait(1)
-            end
-            TaskPlayAnim(GetPlayerPed(-1), "anim@apt_trans@garage", "gar_open_1_left", 1.0, -1.0, 5000, 0, 1, true, true, true) -- animation
+		RequestAnimDict("anim@apt_trans@garage")
+		while not HasAnimDictLoaded("anim@apt_trans@garage") do
+			Wait(1)
+		end
+		TaskPlayAnim(GetPlayerPed(-1), "anim@apt_trans@garage", "gar_open_1_left", 1.0, -1.0, 5000, 0, 1, true, true, true) -- animation
+		-- Removing AnimDict for server memory usage 
+		RemoveAnimDict("anim@apt_trans@garage")
            
             Citizen.Wait(1500) -- prevent spam radar placement + synchro spawn with animation time
            
@@ -2201,12 +2204,15 @@ function POLICE_radar()
             while not HasModelLoaded("prop_cctv_pole_01a") do
                Wait(1)
             end
+	    
            
             Radar = CreateObject(1927491455, RadarPos.x, RadarPos.y, RadarPos.z - 7, true, true, true) -- http://gtan.codeshock.hu/objects/index.php?page=1&search=prop_cctv_pole_01a
             SetEntityRotation(Radar, RadarAng.x, RadarAng.y, RadarAng.z - 115)
             -- SetEntityInvincible(Radar, true) -- doesn't work, radar still destroyable
             -- PlaceObjectOnGroundProperly(Radar) -- useless
             SetEntityAsMissionEntity(Radar, true, true)
+	    -- Set the model as no longer needed after it's created for memory usage	
+	    SetModelAsNoLongerNeeded("prop_cctv_pole_01a")
            
             FreezeEntityPosition(Radar, true) -- set the radar invincible (yeah, SetEntityInvincible just not works, okay FiveM.)
  
