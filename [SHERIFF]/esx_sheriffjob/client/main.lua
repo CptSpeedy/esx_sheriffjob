@@ -353,7 +353,10 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 				if #jobVehicles > 0 then
 					for k,v in ipairs(jobVehicles) do
 						local props = json.decode(v.vehicle)
-						local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
+						--local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
+								
+						local hashVehicule = props.model
+						local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 						local label = ('%s - <span style="color:darkgoldenrod;">%s</span>: '):format(vehicleName, props.plate)
 
 						if v.stored then
