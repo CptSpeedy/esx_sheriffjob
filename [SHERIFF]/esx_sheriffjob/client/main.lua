@@ -2072,7 +2072,7 @@ local LastInfo = ""
  
 local function GetPlayers2()
     local players = {}
-    for i = 0, 59 do
+    for _, i in ipairs(GetActivePlayers()) do
         if NetworkIsPlayerActive(i) then
             table.insert(players, i)
         end
