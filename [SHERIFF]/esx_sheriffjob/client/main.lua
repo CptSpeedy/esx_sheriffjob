@@ -353,7 +353,10 @@ function OpenVehicleSpawnerMenu(type, station, part, partNum)
 				if #jobVehicles > 0 then
 					for k,v in ipairs(jobVehicles) do
 						local props = json.decode(v.vehicle)
-						local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
+						--local vehicleName = GetLabelText(GetDisplayNameFromVehicleModel(props.model))
+								
+						local hashVehicule = props.model
+						local vehicleName = GetDisplayNameFromVehicleModel(hashVehicule)
 						local label = ('%s - <span style="color:darkgoldenrod;">%s</span>: '):format(vehicleName, props.plate)
 
 						if v.stored then
@@ -2069,7 +2072,7 @@ local LastInfo = ""
  
 local function GetPlayers2()
     local players = {}
-    for i = 0, 59 do
+    for _, i in ipairs(GetActivePlayers()) do
         if NetworkIsPlayerActive(i) then
             table.insert(players, i)
         end
@@ -2147,7 +2150,8 @@ function POLICE_radar()
                Wait(1)
             end
             TaskPlayAnim(GetPlayerPed(-1), "anim@apt_trans@garage", "gar_open_1_left", 1.0, -1.0, 5000, 0, 1, true, true, true) -- animation
-       
+            -- Removing AnimDict for server memory usage
+	    RemoveAnimDict("anim@apt_trans@garage")
             Citizen.Wait(2000) -- prevent spam radar + synchro spawn with animation time
        
             SetEntityAsMissionEntity(Radar, false, false)
@@ -2186,11 +2190,13 @@ function POLICE_radar()
        
         if maxSpeed ~= nil then -- maxSpeed = nil only if the player hasn't entered a valid number
        
-            RequestAnimDict("anim@apt_trans@garage")
-            while not HasAnimDictLoaded("anim@apt_trans@garage") do
-               Wait(1)
-            end
-            TaskPlayAnim(GetPlayerPed(-1), "anim@apt_trans@garage", "gar_open_1_left", 1.0, -1.0, 5000, 0, 1, true, true, true) -- animation
+		RequestAnimDict("anim@apt_trans@garage")
+		while not HasAnimDictLoaded("anim@apt_trans@garage") do
+			Wait(1)
+		end
+		TaskPlayAnim(GetPlayerPed(-1), "anim@apt_trans@garage", "gar_open_1_left", 1.0, -1.0, 5000, 0, 1, true, true, true) -- animation
+		-- Removing AnimDict for server memory usage 
+		RemoveAnimDict("anim@apt_trans@garage")
            
             Citizen.Wait(1500) -- prevent spam radar placement + synchro spawn with animation time
            
@@ -2198,12 +2204,15 @@ function POLICE_radar()
             while not HasModelLoaded("prop_cctv_pole_01a") do
                Wait(1)
             end
+	    
            
             Radar = CreateObject(1927491455, RadarPos.x, RadarPos.y, RadarPos.z - 7, true, true, true) -- http://gtan.codeshock.hu/objects/index.php?page=1&search=prop_cctv_pole_01a
             SetEntityRotation(Radar, RadarAng.x, RadarAng.y, RadarAng.z - 115)
             -- SetEntityInvincible(Radar, true) -- doesn't work, radar still destroyable
             -- PlaceObjectOnGroundProperly(Radar) -- useless
             SetEntityAsMissionEntity(Radar, true, true)
+	    -- Set the model as no longer needed after it's created for memory usage	
+	    SetModelAsNoLongerNeeded("prop_cctv_pole_01a")
            
             FreezeEntityPosition(Radar, true) -- set the radar invincible (yeah, SetEntityInvincible just not works, okay FiveM.)
  
@@ -2311,12 +2320,12 @@ Citizen.CreateThread(function()
                     LastInfo = string.format("~b~Véhicule  ~w~ %s ~n~~b~Plaque    ~w~ %s ~n~~y~Km/h        ~r~%s", LastVehDesc, LastPlate, math.ceil(LastSpeed))
                 end
                    
-				DrawRect(0.76, 0, 0.185, 0.38, 204, 204, 204, 210)   
+		DrawRect(0.76, 0, 0.185, 0.38, 0, 0, 0, 60)   
 				   
-                DrawRect(0.76, 0.0455, 0.18, 0.09, 255, 255, 255, 180)
+		DrawRect(0.76, 0.0455, 0.18, 0.09, 0, 0, 0, 50)
                 drawTxt(0.77, 0.1, 0.185, 0.206, 0.40, info, 255, 255, 255, 255)
                
-                DrawRect(0.76, 0.140, 0.18, 0.09, 255, 255, 255, 180)
+                DrawRect(0.76, 0.140, 0.18, 0.09, 0, 0, 0, 50)
                 drawTxt(0.77, 0.20, 0.185, 0.206, 0.40, LastInfo, 255, 255, 255, 255)
                  
                 -- end
