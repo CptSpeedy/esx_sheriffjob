@@ -2320,12 +2320,12 @@ Citizen.CreateThread(function()
                     LastInfo = string.format("~b~Véhicule  ~w~ %s ~n~~b~Plaque    ~w~ %s ~n~~y~Km/h        ~r~%s", LastVehDesc, LastPlate, math.ceil(LastSpeed))
                 end
                    
-				DrawRect(0.76, 0, 0.185, 0.38, 204, 204, 204, 210)   
+		DrawRect(0.76, 0, 0.185, 0.38, 0, 0, 0, 60)   
 				   
-                DrawRect(0.76, 0.0455, 0.18, 0.09, 255, 255, 255, 180)
+		DrawRect(0.76, 0.0455, 0.18, 0.09, 0, 0, 0, 50)
                 drawTxt(0.77, 0.1, 0.185, 0.206, 0.40, info, 255, 255, 255, 255)
                
-                DrawRect(0.76, 0.140, 0.18, 0.09, 255, 255, 255, 180)
+                DrawRect(0.76, 0.140, 0.18, 0.09, 0, 0, 0, 50)
                 drawTxt(0.77, 0.20, 0.185, 0.206, 0.40, LastInfo, 255, 255, 255, 255)
                  
                 -- end
